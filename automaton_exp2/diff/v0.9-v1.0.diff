@@ -1,0 +1,83 @@
+diff --git a/.gitignore b/.gitignore
+index caa93a6..4f0ef95 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -3,7 +3,9 @@
+ **/.vscode/
+ **/*build*/
+ /judge/
+-**/parser/
++/antlr/parser/
++/cpp/parser/
++/python/antlr_parser/
+ /antlr/parser-classes/
+ /cases
+ /scratch/
+diff --git a/antlr/generate-parser.sh b/antlr/generate-parser.sh
+index 9531788..5975e20 100755
+--- a/antlr/generate-parser.sh
++++ b/antlr/generate-parser.sh
+@@ -8,4 +8,4 @@ GRAMMAR_FILE="regex.g4"
+ 
+ $ANTLR_COMMAND -o parser $GRAMMAR_FILE
+ $ANTLR_COMMAND -Dlanguage=Cpp -o ../cpp/parser $GRAMMAR_FILE
+-$ANTLR_COMMAND -Dlanguage=Python3 -o ../python/parser $GRAMMAR_FILE
++$ANTLR_COMMAND -Dlanguage=Python3 -o ../python/antlr_parser $GRAMMAR_FILE
+diff --git a/doc/2.md b/doc/2.md
+index 00a7567..645c61a 100644
+--- a/doc/2.md
++++ b/doc/2.md
+@@ -110,7 +110,8 @@ ANTLR由Java语言编写而成，本质可以视为是一个代码生成器(code
+ 正则表达式的文法定义文件是`antlr/regex.g4`。你不得修改此文件，如对文件内的内容有疑问，请联系助教。    
+ 同时，考虑到不是所有同学都会使用Java，我们已经提前完成好了生成parser的过程，并为你生成了三种不同语言的parser代码，包含在作业框架内：
+ - `cpp/parser`文件夹：是C++语言的parser。调用该parser的过程也已写成`Regex::parse`函数。
+-- `python/parser`：是Python语言的parser。调用该parser的过程也已写成`Regex`类下的`parse`函数。
++- `python/antlr_parser`：是Python语言的parser。调用该parser的过程也已写成`Regex`类下的`parse`函数。
++  - 之所以Python不叫`parser`，是因为在Python3.9或以下的版本中，有一个系统库名叫`parser`，会导致命名冲突。
+ - `antlr/parser`：是Java语言的parser。此parser是供大家自愿[使用TestRig可视化查看语法分析树](#使用TestRig可视化查看语法分析树)时使用的，与实验本身无关。
+ 
+ #### 文法定义
+@@ -231,13 +232,19 @@ QuantifierContext *i1q = i0->quantifier(); // 获得对应的QuantifierContext
+ - `ParseTreeType ParseTree::getTreeType()`
+   - 获得节点的类型。
+   - `antlr4::tree::ParseTreeType`是一个枚举：
+-```c++
+-enum class ParseTreeType : size_t {
+-  TERMINAL = 1,
+-  ERROR = 2,
+-  RULE = 3,
+-};
+-```
++  ```c++
++  enum class ParseTreeType : size_t {
++    TERMINAL = 1,
++    ERROR = 2,
++    RULE = 3,
++  };
++  ```
++  - 注意，Python语言没有这个函数。在Python中判断节点的类型，建议使用isinstance判断：
++  ```python
++  from antlr4 import RuleContext, TerminalNode
++  isinstance(node, RuleContext) # 当node是rule节点（非终结符、非叶子节点）时返回true
++  isinstance(node, TerminalNode) # 当node是终结符节点（叶子节点）时返回true
++  ```
+ - `std::vector<ParseTree*> ParseTree::getText();`
+   - 获得对应于该节点的字符串，即从该节点往下推导出的字符串。
+   - 常用用途是访问到叶子节点后，获得叶子节点的具体字符内容。
+diff --git a/python/regex.py b/python/regex.py
+index 6a0d546..aef014a 100644
+--- a/python/regex.py
++++ b/python/regex.py
+@@ -7,9 +7,9 @@ from typing import List
+ import antlr4.Token
+ from antlr4 import CommonTokenStream, InputStream
+ 
+-from parser.regexLexer import regexLexer
+-from parser.regexParser import regexParser
+-from python.nfa import NFA
++from antlr_parser.regexLexer import regexLexer
++from antlr_parser.regexParser import regexParser
++from nfa import NFA
+ 
+ """
+ 本文件中已经定义好了一些类和函数，类内也已经定义好了一些成员变量和方法。不建议大家修改这些已经定义好的东西。

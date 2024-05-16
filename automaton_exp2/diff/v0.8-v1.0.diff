@@ -1,0 +1,207 @@
+diff --git a/.gitignore b/.gitignore
+index caa93a6..4f0ef95 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -3,7 +3,9 @@
+ **/.vscode/
+ **/*build*/
+ /judge/
+-**/parser/
++/antlr/parser/
++/cpp/parser/
++/python/antlr_parser/
+ /antlr/parser-classes/
+ /cases
+ /scratch/
+diff --git a/antlr/generate-parser.sh b/antlr/generate-parser.sh
+index 9531788..5975e20 100755
+--- a/antlr/generate-parser.sh
++++ b/antlr/generate-parser.sh
+@@ -8,4 +8,4 @@ GRAMMAR_FILE="regex.g4"
+ 
+ $ANTLR_COMMAND -o parser $GRAMMAR_FILE
+ $ANTLR_COMMAND -Dlanguage=Cpp -o ../cpp/parser $GRAMMAR_FILE
+-$ANTLR_COMMAND -Dlanguage=Python3 -o ../python/parser $GRAMMAR_FILE
++$ANTLR_COMMAND -Dlanguage=Python3 -o ../python/antlr_parser $GRAMMAR_FILE
+diff --git a/cpp/lib/antlr/ExternalAntlr4Cpp.cmake b/cpp/lib/antlr/ExternalAntlr4Cpp.cmake
+index 100afbf..c92223e 100644
+--- a/cpp/lib/antlr/ExternalAntlr4Cpp.cmake
++++ b/cpp/lib/antlr/ExternalAntlr4Cpp.cmake
+@@ -189,7 +189,13 @@ if(NOT ANTLR_BUILD_CPP_TESTS)
+   # if ANTLR_BUILD_CPP_TESTS is OFF, then the target in ${ANTLR4_ROOT}/runtime/Cpp/runtimeCMakeLists.txt
+   # will not copy the generated binaries into into ${ANTLR4_ROOT}/runtime/Cpp/dist.
+   # So, we need to copy them now.
+-  set(ANTLR4_RUNTIME_CMAKE_HOME ${ANTLR4_ROOT}/runtime/Cpp/runtime)
++  if(${CMAKE_GENERATOR} MATCHES "Visual Studio.*")
++    set(ANTLR4_RUNTIME_CMAKE_HOME ${ANTLR4_ROOT}/runtime/Cpp/runtime/$(Configuration))
++  elseif(${CMAKE_GENERATOR} MATCHES "Xcode.*")
++    set(ANTLR4_RUNTIME_CMAKE_HOME ${ANTLR4_ROOT}/runtime/Cpp/runtime/$(CONFIGURATION))
++  else()
++    set(ANTLR4_RUNTIME_CMAKE_HOME ${ANTLR4_ROOT}/runtime/Cpp/runtime)
++  endif()
+   get_filename_component(ANTLR4_STATIC_LIBRARIES_BASENAME ${ANTLR4_STATIC_LIBRARIES} NAME)
+   get_filename_component(ANTLR4_RUNTIME_LIBRARIES_BASENAME ${ANTLR4_RUNTIME_LIBRARIES} NAME)
+ 
+diff --git a/cpp/regex.cpp b/cpp/regex.cpp
+index 9b950f9..e8bc912 100644
+--- a/cpp/regex.cpp
++++ b/cpp/regex.cpp
+@@ -5,21 +5,20 @@
+  */
+ 
+ /**
+- * 编译给定的正则表达式，构造出Regex对象。
++ * 编译给定的正则表达式。
+  * 具体包括两个过程：解析正则表达式得到语法分析树（这步已经为你写好，即parse方法），
+  * 和在语法分析树上进行分析（遍历），构造出NFA（需要你完成的部分）。
+  * 在语法分析树上进行分析的方法，可以是直接自行访问该树，也可以是使用antlr的Visitor机制，详见作业文档。
++ * 你编译产生的结果，NFA应保存在当前对象的nfa成员变量中，其他内容也建议保存在当前对象下（你可以自由地在本类中声明新的成员）。
+  * @param pattern 正则表达式的字符串
+  * @param flags 正则表达式的修饰符（第二次实验不要求支持，保证传入的永远是空串）
+- * @return Regex类的对象
+  */
+-Regex Regex::compile(const std::string &pattern, const std::string &flags) {
++void Regex::compile(const std::string &pattern, const std::string &flags) {
+     regexParser::RegexContext *tree = Regex::parse(pattern); // 这是语法分析树
+     // TODO 请你完成这个函数
+-    // 你应该根据tree中的内容，恰当地构造一个Regex对象和一个NFA
+-    Regex regex = Regex();
+-    // regex.nfa.xxx = xxx....
+-    return regex;
++    // 你应该根据tree中的内容，恰当地构造NFA
++    // 构造好的NFA，和其他数据变量（如有），均建议保存在当前对象中。
++    // 例如 (this->)nfa.num_states = 100;
+ }
+ 
+ /**
+diff --git a/cpp/regex.h b/cpp/regex.h
+index 92fec56..fe69292 100644
+--- a/cpp/regex.h
++++ b/cpp/regex.h
+@@ -40,15 +40,15 @@ public:
+     regexParser::RegexContext *parse(const std::string &pattern);
+ 
+     /**
+-     * 编译给定的正则表达式，构造出Regex对象。
++     * 编译给定的正则表达式。
+      * 具体包括两个过程：解析正则表达式得到语法分析树（这步已经为你写好，即parse方法），
+      * 和在语法分析树上进行分析（遍历），构造出NFA（需要你完成的部分）。
+      * 在语法分析树上进行分析的方法，可以是直接自行访问该树，也可以是使用antlr的Visitor机制，详见作业文档。
++     * 你编译产生的结果，NFA应保存在当前对象的nfa成员变量中，其他内容也建议保存在当前对象下（你可以自由地在本类中声明新的成员）。
+      * @param pattern 正则表达式的字符串
+      * @param flags 正则表达式的修饰符（第二次实验不要求支持，保证传入的永远是空串）
+-     * @return Regex类的对象
+      */
+-    Regex compile(const std::string &pattern, const std::string &flags = "");
++    void compile(const std::string &pattern, const std::string &flags = "");
+ 
+     /**
+      * 在给定的输入文本上，进行正则表达式匹配，返回匹配到的第一个结果。
+@@ -61,6 +61,11 @@ public:
+      */
+     std::vector<std::string> match(std::string text);
+ 
++    // 目前仅支持一个默认无参构造函数，且不允许拷贝构造（因为类内有指针）。
++    Regex() = default;
++
++    Regex(const Regex &) = delete;
++
+     // 析构函数，和以下那些private变量，是为了管理ANTLR语法分析树所使用的内存的。你不需要阅读和理解它们。
+     ~Regex();
+ 
+diff --git a/doc/2.md b/doc/2.md
+index 00a7567..645c61a 100644
+--- a/doc/2.md
++++ b/doc/2.md
+@@ -110,7 +110,8 @@ ANTLR由Java语言编写而成，本质可以视为是一个代码生成器(code
+ 正则表达式的文法定义文件是`antlr/regex.g4`。你不得修改此文件，如对文件内的内容有疑问，请联系助教。    
+ 同时，考虑到不是所有同学都会使用Java，我们已经提前完成好了生成parser的过程，并为你生成了三种不同语言的parser代码，包含在作业框架内：
+ - `cpp/parser`文件夹：是C++语言的parser。调用该parser的过程也已写成`Regex::parse`函数。
+-- `python/parser`：是Python语言的parser。调用该parser的过程也已写成`Regex`类下的`parse`函数。
++- `python/antlr_parser`：是Python语言的parser。调用该parser的过程也已写成`Regex`类下的`parse`函数。
++  - 之所以Python不叫`parser`，是因为在Python3.9或以下的版本中，有一个系统库名叫`parser`，会导致命名冲突。
+ - `antlr/parser`：是Java语言的parser。此parser是供大家自愿[使用TestRig可视化查看语法分析树](#使用TestRig可视化查看语法分析树)时使用的，与实验本身无关。
+ 
+ #### 文法定义
+@@ -231,13 +232,19 @@ QuantifierContext *i1q = i0->quantifier(); // 获得对应的QuantifierContext
+ - `ParseTreeType ParseTree::getTreeType()`
+   - 获得节点的类型。
+   - `antlr4::tree::ParseTreeType`是一个枚举：
+-```c++
+-enum class ParseTreeType : size_t {
+-  TERMINAL = 1,
+-  ERROR = 2,
+-  RULE = 3,
+-};
+-```
++  ```c++
++  enum class ParseTreeType : size_t {
++    TERMINAL = 1,
++    ERROR = 2,
++    RULE = 3,
++  };
++  ```
++  - 注意，Python语言没有这个函数。在Python中判断节点的类型，建议使用isinstance判断：
++  ```python
++  from antlr4 import RuleContext, TerminalNode
++  isinstance(node, RuleContext) # 当node是rule节点（非终结符、非叶子节点）时返回true
++  isinstance(node, TerminalNode) # 当node是终结符节点（叶子节点）时返回true
++  ```
+ - `std::vector<ParseTree*> ParseTree::getText();`
+   - 获得对应于该节点的字符串，即从该节点往下推导出的字符串。
+   - 常用用途是访问到叶子节点后，获得叶子节点的具体字符内容。
+diff --git a/python/regex.py b/python/regex.py
+index f13cbbf..aef014a 100644
+--- a/python/regex.py
++++ b/python/regex.py
+@@ -7,9 +7,9 @@ from typing import List
+ import antlr4.Token
+ from antlr4 import CommonTokenStream, InputStream
+ 
+-from parser.regexLexer import regexLexer
+-from parser.regexParser import regexParser
+-from python.nfa import NFA
++from antlr_parser.regexLexer import regexLexer
++from antlr_parser.regexParser import regexParser
++from nfa import NFA
+ 
+ """
+ 本文件中已经定义好了一些类和函数，类内也已经定义好了一些成员变量和方法。不建议大家修改这些已经定义好的东西。
+@@ -63,22 +63,21 @@ class Regex:
+             stream.getText(0, stream.index - 1))
+         return tree
+ 
+-    def compile(self, pattern: str, flags="") -> "Regex":
++    def compile(self, pattern: str, flags="") -> None:
+         """
+-        编译给定的正则表达式，构造出Regex对象。
++        编译给定的正则表达式。
+         具体包括两个过程：解析正则表达式得到语法分析树（这步已经为你写好，即parse方法），
+         和在语法分析树上进行分析（遍历），构造出NFA（需要你完成的部分）。
+         在语法分析树上进行分析的方法，可以是直接自行访问该树，也可以是使用antlr的Visitor机制，详见作业文档。
++        你编译产生的结果，NFA应保存在self.nfa中，其他内容也建议保存在当前对象下。
+         :param pattern 正则表达式的字符串
+         :param flags 正则表达式的修饰符（第二次实验不要求支持，保证传入的永远是空串）
+-        :return: Regex类的对象
+         """
+         tree = Regex.parse(pattern)  # 这是语法分析树
+         # TODO 请你完成这个函数
+-        # 你应该根据tree中的内容，恰当地构造一个Regex对象和一个NFA
+-        regex = Regex()
+-        regex.nfa = NFA()
+-        return regex
++        # 你应该根据tree中的内容，恰当地构造NFA
++        # 构造好的NFA，和其他数据变量（如有），均建议保存在当前对象中。
++        self.nfa = NFA()
+ 
+     def match(self, text: str) -> List[str]:
+         """
+@@ -126,7 +125,7 @@ if __name__ == '__main__':
+ 
+     if type == "find":
+         regex = Regex()
+-        regex = regex.compile(pattern, flags)
++        regex.compile(pattern, flags)
+         matchRes = regex.match(input_str)
+         print(json.dumps(matchRes))
+     else:

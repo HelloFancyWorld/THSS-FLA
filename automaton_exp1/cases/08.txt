@@ -1,0 +1,7 @@
+states: 4
+final: 2 3
+rules:
+0->1 a b \d
+1->2 a-z - _
+2->3 \e d 1
+input: 1bd

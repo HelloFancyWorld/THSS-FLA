@@ -1,0 +1,2 @@
+cmake --build .
+Debug\regex.exe ../../cases/02.txt

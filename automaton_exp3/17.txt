@@ -1,0 +1,80 @@
+type: replaceAll
+pattern: (\d{4})\d{6}_\w+_(\d{0,2}?)\d{1,2}
+replacement: $1******_******_$2**
+input: [ 66%] Building CXX object CMakeFiles/nfa.dir/nfa.cpp.o
+/root/exp1/2021011234_ZhangSan_3515/nfa/cpp/nfa.cpp: In member function 'Path NFA::exec(std::string)':
+/root/exp1/2021011234_ZhangSan_3515/nfa/cpp/nfa.cpp:28:81: error: cannot bind non-const lvalue reference of type 'std::string&' {aka 'std::__cxx11::basic_string<char>&'} to an rvalue of type 'std::string' {aka 'std::__cxx11::basic_string<char>'}
+   28 |                         add_new_node(new_nodes, c_node, ru.dst, c_node.id, std::string(1, ch));
+      |                                                                                 ^~~~~~~~~~~~~
+In file included from /root/exp1/2021029876_LiSi_21/nfa/cpp/nfa.cpp:1:
+/root/exp1/2021029876_LiSi_21/nfa/cpp/nfa.h:83:104: note:   initializing argument 5 of 'void NFA::add_new_node(std::vector<Node>&, Node&, int, int, std::string&)'
+   83 | _node(std::vector<Node>& new_nodes, Node& c_node, int id, int last_state, std::string& last_consum);
+      |                                                                           ~~~~~~~~~~~~~^~~~~~~~~~~
+
+/root/exp1/2021029876_LiSi_21/nfa/cpp/nfa.cpp:36:81: error: cannot bind non-const lvalue reference of type 'std::string&' {aka 'std::__cxx11::basic_string<char>&'} to an rvalue of type 'std::string' {aka 'std::__cxx11::basic_string<char>'}
+   36 |                         add_new_node(new_nodes, c_node, ru.dst, c_node.id, std::string(1, ch));
+      |                                                                                 ^~~~~~~~~~~~~
+In file included from /root/exp1/2021036666_WangWu_823/nfa/cpp/nfa.cpp:1:
+/root/exp1/2021036666_WangWu_823/nfa/cpp/nfa.h:83:104: note:   initializing argument 5 of 'void NFA::add_new_node(std::vector<Node>&, Node&, int, int, std::string&)'
+   83 | _node(std::vector<Node>& new_nodes, Node& c_node, int id, int last_state, std::string& last_consum);
+      |                                                                           ~~~~~~~~~~~~~^~~~~~~~~~~
+
+/root/exp1/2021036666_WangWu_823/nfa/cpp/nfa.cpp:48:85: error: cannot bind non-const lvalue reference of type 'std::string&' {aka 'std::__cxx11::basic_string<char>&'} to an rvalue of type 'std::string' {aka 'std::__cxx11::basic_string<char>'}
+   48 |                             add_new_node(new_nodes, c_node, ru.dst, c_node.id, std::string(1, ch));
+      |                                                                                     ^~~~~~~~~~~~~
+In file included from /root/exp1/2021011234_ZhangSan_3515/nfa/cpp/nfa.cpp:1:
+/root/exp1/2021011234_ZhangSan_3515/nfa/cpp/nfa.h:83:104: note:   initializing argument 5 of 'void NFA::add_new_node(std::vector<Node>&, Node&, int, int, std::string&)'
+   83 | _node(std::vector<Node>& new_nodes, Node& c_node, int id, int last_state, std::string& last_consum);
+      |                                                                           ~~~~~~~~~~~~~^~~~~~~~~~~
+
+/root/exp1/2021011234_ZhangSan_3515/nfa/cpp/nfa.cpp:56:85: error: cannot bind non-const lvalue reference of type 'std::string&' {aka 'std::__cxx11::basic_string<char>&'} to an rvalue of type 'std::string' {aka 'std::__cxx11::basic_string<char>'}
+   56 |                             add_new_node(new_nodes, c_node, ru.dst, c_node.id, std::string(1, ch));
+      |                                                                                     ^~~~~~~~~~~~~
+In file included from /root/exp1/2021029876_LiSi_21/nfa/cpp/nfa.cpp:1:
+/root/exp1/2021029876_LiSi_21/nfa/cpp/nfa.h:83:104: note:   initializing argument 5 of 'void NFA::add_new_node(std::vector<Node>&, Node&, int, int, std::string&)'
+   83 | _node(std::vector<Node>& new_nodes, Node& c_node, int id, int last_state, std::string& last_consum);
+      |                                                                           ~~~~~~~~~~~~~^~~~~~~~~~~
+
+/root/exp1/2021029876_LiSi_21/nfa/cpp/nfa.cpp:64:85: error: cannot bind non-const lvalue reference of type 'std::string&' {aka 'std::__cxx11::basic_string<char>&'} to an rvalue of type 'std::string' {aka 'std::__cxx11::basic_string<char>'}
+   64 |                             add_new_node(new_nodes, c_node, ru.dst, c_node.id, std::string(1, ch));
+      |                                                                                     ^~~~~~~~~~~~~
+In file included from /root/exp1/2021036666_WangWu_823/nfa/cpp/nfa.cpp:1:
+/root/exp1/2021036666_WangWu_823/nfa/cpp/nfa.h:83:104: note:   initializing argument 5 of 'void NFA::add_new_node(std::vector<Node>&, Node&, int, int, std::string&)'
+   83 | _node(std::vector<Node>& new_nodes, Node& c_node, int id, int last_state, std::string& last_consum);
+      |                                                                           ~~~~~~~~~~~~~^~~~~~~~~~~
+
+/root/exp1/2021036666_WangWu_823/nfa/cpp/nfa.cpp:72:85: error: cannot bind non-const lvalue reference of type 'std::string&' {aka 'std::__cxx11::basic_string<char>&'} to an rvalue of type 'std::string' {aka 'std::__cxx11::basic_string<char>'}
+   72 |                             add_new_node(new_nodes, c_node, ru.dst, c_node.id, std::string(1, ch));
+      |                                                                                     ^~~~~~~~~~~~~
+In file included from /root/exp1/2021011234_ZhangSan_3515/nfa/cpp/nfa.cpp:1:
+/root/exp1/2021011234_ZhangSan_3515/nfa/cpp/nfa.h:83:104: note:   initializing argument 5 of 'void NFA::add_new_node(std::vector<Node>&, Node&, int, int, std::string&)'
+   83 | _node(std::vector<Node>& new_nodes, Node& c_node, int id, int last_state, std::string& last_consum);
+      |                                                                           ~~~~~~~~~~~~~^~~~~~~~~~~
+
+/root/exp1/2021011234_ZhangSan_3515/nfa/cpp/nfa.cpp:80:85: error: cannot bind non-const lvalue reference of type 'std::string&' {aka 'std::__cxx11::basic_string<char>&'} to an rvalue of type 'std::string' {aka 'std::__cxx11::basic_string<char>'}
+   80 |                             add_new_node(new_nodes, c_node, ru.dst, c_node.id, std::string(1, ch));
+      |                                                                                     ^~~~~~~~~~~~~
+In file included from /root/exp1/2021011234_ZhangSan_3515/nfa/cpp/nfa.cpp:1:
+/root/exp1/2021011234_ZhangSan_3515/nfa/cpp/nfa.h:83:104: note:   initializing argument 5 of 'void NFA::add_new_node(std::vector<Node>&, Node&, int, int, std::string&)'
+   83 | _node(std::vector<Node>& new_nodes, Node& c_node, int id, int last_state, std::string& last_consum);
+      |                                                                           ~~~~~~~~~~~~~^~~~~~~~~~~
+
+/root/exp1/2021011234_ZhangSan_3515/nfa/cpp/nfa.cpp:88:85: error: cannot bind non-const lvalue reference of type 'std::string&' {aka 'std::__cxx11::basic_string<char>&'} to an rvalue of type 'std::string' {aka 'std::__cxx11::basic_string<char>'}
+   88 |                             add_new_node(new_nodes, c_node, ru.dst, c_node.id, std::string(1, ch));
+      |                                                                                     ^~~~~~~~~~~~~
+In file included from /root/exp1/2021036666_WangWu_823/nfa/cpp/nfa.cpp:1:
+/root/exp1/2021036666_WangWu_823/nfa/cpp/nfa.h:83:104: note:   initializing argument 5 of 'void NFA::add_new_node(std::vector<Node>&, Node&, int, int, std::string&)'
+   83 | _node(std::vector<Node>& new_nodes, Node& c_node, int id, int last_state, std::string& last_consum);
+      |                                                                           ~~~~~~~~~~~~~^~~~~~~~~~~
+
+/root/exp1/2021036666_WangWu_823/nfa/cpp/nfa.cpp:94:81: error: cannot bind non-const lvalue reference of type 'std::string&' {aka 'std::__cxx11::basic_string<char>&'} to an rvalue of type 'std::string' {aka 'std::__cxx11::basic_string<char>'}
+   94 |                         add_new_node(new_nodes, c_node, ru.dst, c_node.id, std::string(1, ch));
+      |                                                                                 ^~~~~~~~~~~~~
+In file included from /root/exp1/2021011234_ZhangSan_3515/nfa/cpp/nfa.cpp:1:
+/root/exp1/2021011234_ZhangSan_3515/nfa/cpp/nfa.h:83:104: note:   initializing argument 5 of 'void NFA::add_new_node(std::vector<Node>&, Node&, int, int, std::string&)'
+   83 | _node(std::vector<Node>& new_nodes, Node& c_node, int id, int last_state, std::string& last_consum);
+      |                                                                           ~~~~~~~~~~~~~^~~~~~~~~~~
+
+gmake[2]: *** [CMakeFiles/nfa.dir/build.make:90: CMakeFiles/nfa.dir/nfa.cpp.o] Error 1
+gmake[1]: *** [CMakeFiles/Makefile2:83: CMakeFiles/nfa.dir/all] Error 2
+gmake: *** [Makefile:91: all] Error 2

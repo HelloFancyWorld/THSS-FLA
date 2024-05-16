@@ -1,0 +1,13 @@
+**/.idea/
+**/.vs/
+**/.vscode/
+**/*build*/
+/judge/
+/antlr/parser/
+/cpp/parser/
+/python/antlr_parser/
+/antlr/parser-classes/
+/cases
+/scratch/
+.~*.ppt
+__pycache__/

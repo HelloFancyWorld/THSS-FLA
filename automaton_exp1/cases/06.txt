@@ -1,0 +1,5 @@
+states: 1
+final: 0
+rules:
+0->0 \.
+input: formal language and automaton

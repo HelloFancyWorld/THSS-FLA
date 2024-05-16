@@ -1,0 +1,13 @@
+states: 6
+final: 2 4
+rules:
+0->1 a
+0->5 b
+1->5 a
+1->2 b
+2->3 a b
+3->4 a
+3->5 b
+4->5 a b
+5->5 a b
+input: abaa
